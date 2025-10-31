@@ -3,35 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regjistri i Pacientëve</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<title>📋 Regjistri i Pacientëve</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; padding: 20px; }
-    .container { max-width: 1200px; margin: auto; }
-    h1 { text-align: center; margin-bottom: 20px; color: #333; }
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab { padding: 10px 20px; cursor: pointer; border-radius: 6px; background: #667eea; color: white; transition: 0.3s; }
-    .tab.active { background: white; color: #667eea; font-weight: bold; border: 1px solid #667eea; }
-    .tab-content { display: none; background: white; padding: 20px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .tab-content.active { display: block; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: 600; }
-    input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; background: #667eea; color: white; transition: 0.2s; }
-    button:hover { opacity: 0.9; }
-    .btn-danger { background: #dc3545; }
-    .btn-add { background: #28a745; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border-bottom: 1px solid #ccc; text-align: left; }
-    th { background: #f5f5f5; }
-    .icd-code-entry { display: flex; gap: 10px; margin-bottom: 5px; }
-    .icd-code-entry input { flex: 1; }
-    .badge { display: inline-block; padding: 3px 7px; background: #667eea; color: white; border-radius: 3px; font-size: 12px; margin: 2px; }
-    .message { padding: 10px; border-radius: 4px; margin-bottom: 10px; display: none; }
-    .message.success { background: #d4edda; color: #155724; }
-    .message.error { background: #f8d7da; color: #721c24; }
+    /* General */
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+    body { background:#eef2f7; color:#333; padding:20px; }
+    .container { max-width:1200px; margin:auto; }
+    h1 { text-align:center; margin-bottom:20px; font-size:2em; background: linear-gradient(90deg,#667eea,#764ba2); -webkit-background-clip:text; color:transparent; }
+
+    /* Tabs */
+    .tabs { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+    .tab { flex:1; padding:12px 0; cursor:pointer; text-align:center; border-radius:8px; background:#667eea; color:white; font-weight:600; transition:0.3s; }
+    .tab.active { background:white; color:#667eea; border:2px solid #667eea; }
+
+    .tab-content { display:none; background:white; padding:25px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+    .tab-content.active { display:block; }
+
+    /* Form */
+    .form-group { margin-bottom:15px; }
+    label { display:block; margin-bottom:5px; font-weight:600; }
+    input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; transition:0.2s; }
+    input:focus, select:focus { border-color:#667eea; outline:none; }
+
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px; }
+    .btn { padding:10px 20px; border:none; border-radius:6px; cursor:pointer; transition:0.2s; font-weight:600; }
+    .btn:hover { opacity:0.9; }
+    .btn-primary { background:#667eea; color:white; }
+    .btn-danger { background:#dc3545; color:white; }
+    .btn-add { background:#28a745; color:white; margin-top:10px; }
+
+    /* Table */
+    table { width:100%; border-collapse:collapse; margin-top:15px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+    th,td { padding:12px; border-bottom:1px solid #ddd; text-align:left; }
+    th { background:#f5f5f5; }
+    tr:hover { background:#f0f8ff; }
+
+    /* ICD badges */
+    .badge { display:inline-block; padding:3px 8px; background:#667eea; color:white; border-radius:4px; font-size:12px; margin:2px; }
+
+    /* Messages */
+    .message { padding:12px; border-radius:6px; margin-bottom:10px; display:none; font-weight:600; }
+    .message.success { background:#d4edda; color:#155724; }
+    .message.error { background:#f8d7da; color:#721c24; }
+
+    /* ICD container */
+    .icd-code-entry { display:flex; gap:10px; margin-bottom:5px; }
+    .icd-code-entry input { flex:1; }
+
+    /* Stats cards */
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:15px; }
+    .card { padding:20px; border-radius:10px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,0.1); text-align:center; transition:0.3s; }
+    .card:hover { transform:translateY(-5px); }
+    .card h2 { font-size:1.5em; margin-bottom:5px; }
 </style>
 </head>
 <body>
@@ -104,13 +127,13 @@
                     <div class="icd-code-entry">
                         <input type="text" class="icd-code" placeholder="Kodi ICD-10">
                         <input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)">
-                        <button type="button" class="btn-danger" onclick="removeIcdCode(this)">Fshi</button>
+                        <button type="button" class="btn btn-danger" onclick="removeIcdCode(this)">Fshi</button>
                     </div>
                 </div>
-                <button type="button" class="btn-add" onclick="addIcdCode()">+ Shto Kod ICD-10</button>
+                <button type="button" class="btn btn-add" onclick="addIcdCode()">+ Shto Kod ICD-10</button>
             </div>
 
-            <button type="submit">Regjistro Pacientin</button>
+            <button type="submit" class="btn btn-primary">Regjistro Pacientin</button>
         </form>
     </div>
 
@@ -135,13 +158,13 @@
                 </select>
             </div>
         </div>
-        <button onclick="searchPatients()">Kërko</button>
+        <button class="btn btn-primary" onclick="searchPatients()">Kërko</button>
         <div id="searchResults"></div>
     </div>
 
     <!-- Stats -->
     <div id="stats" class="tab-content">
-        <div id="statsContainer"></div>
+        <div id="statsContainer" class="stats-grid"></div>
     </div>
 </div>
 
@@ -179,7 +202,7 @@ function calculateStay(){
 function addIcdCode(){
     const container=document.getElementById('icdCodesContainer');
     const div=document.createElement('div'); div.className='icd-code-entry';
-    div.innerHTML='<input type="text" class="icd-code" placeholder="Kodi ICD-10"><input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)"><button type="button" class="btn-danger" onclick="removeIcdCode(this)">Fshi</button>';
+    div.innerHTML='<input type="text" class="icd-code" placeholder="Kodi ICD-10"><input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)"><button type="button" class="btn btn-danger" onclick="removeIcdCode(this)">Fshi</button>';
     container.appendChild(div);
 }
 function removeIcdCode(btn){
@@ -234,7 +257,7 @@ async function loadPatients(){
         patients.forEach(p=>{
             html+='<tr>';
             html+=`<td>${p.protocol_number}</td><td>${p.name}</td><td>${p.gender}</td><td>${p.age} vjeç</td><td>${p.admission_date}</td><td>${p.discharge_date||'-'}</td><td>${p.length_of_stay||'-'}</td><td>${p.icd_codes.map(c=>'<span class="badge">'+c+'</span>').join(' ')}</td>`;
-            html+=`<td><button class="btn-danger" onclick="deletePatient('${p.protocol_number}')">Fshi</button></td>`;
+            html+=`<td><button class="btn btn-danger" onclick="deletePatient('${p.protocol_number}')">Fshi</button></td>`;
             html+='</tr>';
         });
         html+='</table>'; table.innerHTML=html;
@@ -257,13 +280,14 @@ async function searchPatients(){
     if(icd) params.append('icd_code',icd);
     if(gender) params.append('gender',gender);
     try{
-        const res=await fetch('/api/patients?'+params);
-        const patients=await res.json();
+        const res=await fetch('/api/patients/search?'+params);
+        const data=await res.json();
+        const patients=data.patients;
         let html='<table><tr><th>Protokolli</th><th>Emri</th><th>Gjinia</th><th>Mosha</th><th>Pranimi</th><th>Lëshimi</th><th>Ditë</th><th>ICD</th><th>Veprime</th></tr>';
         patients.forEach(p=>{
             html+='<tr>';
             html+=`<td>${p.protocol_number}</td><td>${p.name}</td><td>${p.gender}</td><td>${p.age} vjeç</td><td>${p.admission_date}</td><td>${p.discharge_date||'-'}</td><td>${p.length_of_stay||'-'}</td><td>${p.icd_codes.map(c=>'<span class="badge">'+c+'</span>').join(' ')}</td>`;
-            html+=`<td><button class="btn-danger" onclick="deletePatient('${p.protocol_number}')">Fshi</button></td>`;
+            html+=`<td><button class="btn btn-danger" onclick="deletePatient('${p.protocol_number}')">Fshi</button></td>`;
             html+='</tr>';
         });
         html+='</table>'; document.getElementById('searchResults').innerHTML=html;
@@ -272,21 +296,17 @@ async function searchPatients(){
 
 async function loadStats(){
     try{
-        const res=await fetch('/api/patients');
-        const patients=await res.json();
-        let html='<h3>Statistika</h3><ul>';
-        html+=`<li>Gjithsej pacientë: ${patients.length}</li>`;
-        const male=patients.filter(p=>p.gender==='Mashkull').length;
-        const female=patients.filter(p=>p.gender==='Femër').length;
-        html+=`<li>Mashkull: ${male}</li><li>Femër: ${female}</li>`;
-        const ageGroups={'0-18':0,'19-64':0,'65+':0};
-        patients.forEach(p=>{
-            if(p.age<=18) ageGroups['0-18']++;
-            else if(p.age<=64) ageGroups['19-64']++;
-            else ageGroups['65+']++;
+        const res=await fetch('/api/statistics');
+        const stats=await res.json();
+        let html='';
+        html+=`<div class="card"><h2>${stats.total}</h2>Gjithsej Pacientë</div>`;
+        stats.byGender.forEach(g=>{
+            html+=`<div class="card"><h2>${g.count}</h2>${g.gender}</div>`;
         });
-        html+=`<li>0-18 vjeç: ${ageGroups['0-18']}</li><li>19-64 vjeç: ${ageGroups['19-64']}</li><li>65+ vjeç: ${ageGroups['65+']}</li>`;
-        html+='</ul>';
+        const ageGroups=stats.ageGroups;
+        for(const k in ageGroups){
+            html+=`<div class="card"><h2>${ageGroups[k]}</h2>Mosha ${k}</div>`;
+        }
         document.getElementById('statsContainer').innerHTML=html;
     }catch(err){ console.error(err); }
 }

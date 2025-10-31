@@ -4,114 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Regjistri i Pacientëve</title>
-<link rel="stylesheet" href="style.css">
+<style>
+/* ---- BASIC RESET ---- */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif;}
+body { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); padding:20px; color:#333;}
+.container { max-width:1200px; margin:0 auto;}
+h1 { text-align:center; color:white; margin-bottom:30px; text-shadow:2px 2px 4px rgba(0,0,0,0.2);}
+.tabs { display:flex; gap:10px; margin-bottom:20px;}
+.tab { padding:12px 24px; border:none; border-radius:8px 8px 0 0; cursor:pointer; font-size:16px; color:white; background: rgba(255,255,255,0.2); transition:0.3s;}
+.tab.active { background:white; color:#667eea; font-weight:bold;}
+.tab-content { display:none; background:white; padding:30px; border-radius:0 8px 8px 8px; box-shadow:0 10px 40px rgba(0,0,0,0.2);}
+.tab-content.active { display:block;}
+.form-group { margin-bottom:20px;}
+label { display:block; margin-bottom:8px; font-weight:600;}
+input,select,textarea { width:100%; padding:12px; border:2px solid #e0e0e0; border-radius:6px; font-size:14px; transition:0.3s;}
+input:focus, select:focus, textarea:focus { outline:none; border-color:#667eea;}
+.row { display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+button { padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-size:16px; font-weight:600; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; transition:0.2s;}
+button:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(102,126,234,0.4);}
+button:active { transform:translateY(0);}
+.btn-danger { background:#dc3545; padding:8px 16px; font-size:14px;}
+.btn-add { background:#28a745; margin-bottom:15px;}
+.message { display:none; padding:12px; border-radius:6px; margin-bottom:20px;}
+.message.success { background:#d4edda;color:#155724; border:1px solid #c3e6cb;}
+.message.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb;}
+.message.show { display:block;}
+table { width:100%; border-collapse:collapse; margin-top:20px;}
+th,td { padding:12px; text-align:left; border-bottom:1px solid #e0e0e0;}
+th { background:#f8f9fa; font-weight:600;}
+tr:hover { background:#f8f9fa;}
+.icd-code-entry { display:grid; grid-template-columns:200px 1fr auto; gap:10px; margin-bottom:10px;}
+.icd-codes { border:2px solid #e0e0e0; border-radius:6px; padding:15px; margin-bottom:20px;}
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; margin-bottom:30px;}
+.stat-card { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:20px; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.stat-card h3 { font-size:14px; margin-bottom:10px; opacity:0.9;}
+.stat-card .value { font-size:32px; font-weight:bold;}
+.badge { display:inline-block; padding:4px 8px; background:#667eea; color:white; border-radius:4px; font-size:12px; margin:2px;}
+.required { color:#dc3545;}
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>📋 Regjistri i Pacientëve</h1>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('register')">Regjistro Pacient</button>
-        <button class="tab" onclick="showTab('list')">Lista e Pacientëve</button>
-        <button class="tab" onclick="showTab('search')">Kërko</button>
-        <button class="tab" onclick="showTab('stats')">Statistika</button>
-    </div>
-
-    <!-- Tabs Content -->
-    <div id="register" class="tab-content active">
-        <div id="registerMessage" class="message"></div>
-        <form id="patientForm">
-            <div class="row">
-                <div class="form-group">
-                    <label>Numri i Protokollit *</label>
-                    <input type="text" id="protocol_number" required>
-                </div>
-                <div class="form-group">
-                    <label>Emri i Pacientit *</label>
-                    <input type="text" id="name" required>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label>Gjinia *</label>
-                    <select id="gender" required>
-                        <option value="">Zgjidh...</option>
-                        <option value="Mashkull">Mashkull</option>
-                        <option value="Femër">Femër</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Data e Lindjes *</label>
-                    <input type="date" id="date_of_birth" required onchange="calculateAge()">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label>Mosha (Automatike)</label>
-                    <input type="text" id="age_display" readonly>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label>Data e Pranimit *</label>
-                    <input type="date" id="admission_date" required onchange="calculateStay()">
-                </div>
-                <div class="form-group">
-                    <label>Data e Lëshimit</label>
-                    <input type="date" id="discharge_date" onchange="calculateStay()">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Ditë Qëndrimi (Automatike)</label>
-                <input type="text" id="stay_display" readonly>
-            </div>
-
-            <div class="icd-codes">
-                <label>Kodet ICD-10</label>
-                <div id="icdCodesContainer">
-                    <div class="icd-code-entry">
-                        <input type="text" class="icd-code" placeholder="Kodi ICD-10">
-                        <input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)">
-                        <button type="button" class="btn-danger" onclick="removeIcdCode(this)">Fshi</button>
-                    </div>
-                </div>
-                <button type="button" class="btn-add" onclick="addIcdCode()">+ Shto Kod ICD-10</button>
-            </div>
-
-            <button type="submit">Regjistro Pacientin</button>
-        </form>
-    </div>
-
-    <div id="list" class="tab-content">
-        <h2>Të Gjithë Pacientët</h2>
-        <div id="patientsTable"></div>
-    </div>
-
-    <div id="search" class="tab-content">
-        <h2>Kërko Pacientë</h2>
-        <div class="search-filters">
-            <input type="text" id="search_icd" placeholder="Kodi ICD-10">
-            <input type="number" id="search_age" placeholder="Mosha minimale">
-            <select id="search_gender">
-                <option value="">Të gjitha</option>
-                <option value="Mashkull">Mashkull</option>
-                <option value="Femër">Femër</option>
-            </select>
-            <button onclick="searchPatients()">Kërko</button>
-        </div>
-        <div id="searchResults"></div>
-    </div>
-
-    <div id="stats" class="tab-content">
-        <h2>Statistika</h2>
-        <div id="statsContainer"></div>
-    </div>
+<h1>📋 Regjistri i Pacientëve</h1>
+<div class="tabs">
+<button class="tab active" onclick="showTab('register')">Regjistro Pacient</button>
+<button class="tab" onclick="showTab('list')">Lista e Pacientëve</button>
+<button class="tab" onclick="showTab('search')">Kërko</button>
+<button class="tab" onclick="showTab('stats')">Statistika</button>
 </div>
 
-<script src="script.js"></script>
-</body>
-</html>
+<div id="register" class="tab-content active">
+<div id="registerMessage" class="message"></div>
+<form id="patientForm">
+<div class="row">
+<div class="form-group">
+<label>Numri i Protokollit <span class="required">*</span></label>
+<input type="text" id="protocol_number" required>
+</div>
+<div class="form-group">
+<label>Emri i Pacientit <span class="required">*</span></label>
+<input type="text" id="name" required>
+</div>
+</div>
+
+<div class="row">
+<div class="form-group">
+<label>Gjinia <span class="required">*</span></label>
+<select id="gender" required>
+<option value="">Zgjidh...</option>
+<option value="Mashkull">Mashkull</option>
+<option value="Femër">Femër</option>
+</select>
+</div>
+<div class="form-group">
+<label>Data e Lindjes <span class="required">*</span></label>
+<input type="date" id="date_of_birth" required onchange="calculateAge()">
+</div>
+</div>
+
+<div class="row">
+<div class="form-group">
+<label>Mosha (Automatike)</label>
+<input type="text" id="age_display" readonly style="background:#f0f0f0;">
+</div>
+<div></div>
+</div>
+
+<div class="row">
+<div class="form-group">
+<label>Data e Pranimit <span class="required">*</span></label>
+<input type="date" id="admission_date" required onchange="calculateStay()">
+</div>
+<div class="form-group">
+<label>Data e Lëshimit</label>
+<input type="date" id="discharge_date" onchange="calculateStay()">
+</div>
+</div>
+
+<div class="form-group">
+<label>Ditë Qëndrimi (Automatike)</label>
+<input type="text" id="stay_display" readonly style="background:#f0f0f0;">
+</div>
+
+<div class="icd-codes">
+<label>Kodet ICD-10</label>
+<div id="icdCodesContainer">
+<div class="icd-code-entry">
+<input type="text" class="icd-code" placeholder="Kodi ICD-10">
+<input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)">
+<button type="button" class="btn-danger" onclick="removeIcdCode(this)">Fshi</button>
+</div>
+</div>
+<button type="button" class="btn-add" onclick="addIcdCode()">+ Shto Kod ICD-10</button>
+</div>
+
+<button type="submit">Regjistro Pacientin</button>
+</form>
+</div>
+
+<div id="list" class="tab-content"></div>
+<div id="search" class="tab-content"></div>
+<div id="stats" class="tab-content"></div>
+</div>
+
+<script>
+// Tabs
+function showTab(tabName){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(tabName).classList.add('active');
+if(tabName==='list') loadPatients();
+if(tabName==='stats') loadStats();
+}
+
+// Age/Stay
+function calculateAge(){const dob=document.getElementById('date_of_birth').value;if(dob){const t=new Date(),b=new Date(dob);let age=t.getFullYear()-b.getFullYear();const m=t.getMonth()-b.getMonth();if(m<0||(m===0&&t.getDate()<b.getDate())) age--;document.getElementById('age_display').value=age+' vjeç';}}
+function calculateStay(){const a=document.getElementById('admission_date').value,d=document.getElementById('discharge_date').value;if(a&&d){const ad=new Date(a),dd=new Date(d),days=Math.ceil((dd-ad)/(1000*60*60*24))+1;document.getElementById('stay_display').value=days+' ditë';}else document.getElementById('stay_display').value='';}
+
+// ICD Codes
+function addIcdCode(){const c=document.getElementById('icdCodesContainer');const e=document.createElement('div');e.className='icd-code-entry';e.innerHTML=`<input type="text" class="icd-code" placeholder="Kodi ICD-10"><input type="text" class="icd-description" placeholder="Përshkrimi (opsionale)"><button type="button" class="btn-danger" onclick="removeIcdCode(this)">Fshi</button>`;c.appendChild(e);}
+function removeIcdCode(btn){const c=document.getElementById('icdCodesContainer');if(c.children.length>1) btn.parentElement.remove();else showMessage('registerMessage','Duhet të ketë të paktën një kod ICD-10','error');}
+
+// Messages
+function showMessage(id,msg,type){const e=document.getElementById(id);e.textContent=msg;e.className=`message ${type} show`;setTimeout(()=>{e.classList.remove('show');},5000);}
+
+// Form submit
+document.getElementById('patientForm').addEventListener('submit',async e=>{
+e.preventDefault();
+const icdCodes

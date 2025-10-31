@@ -1,23 +1,14 @@
 {
   "name": "patient-registry",
   "version": "1.0.0",
-  "description": "Patient registry system with ICD-10, search, and statistics",
+  "description": "Patient registry app",
   "main": "index.js",
-  "type": "commonjs",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
-  "keywords": ["patients", "registry", "healthcare", "sqlite", "express"],
-  "author": "Your Name",
-  "license": "MIT",
   "dependencies": {
     "body-parser": "^2.2.0",
-    "cors": "^2.8.5",
     "express": "^5.1.0",
     "sqlite3": "^5.1.7"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
   }
 }

@@ -244,3 +244,18 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+// Delete patient by protocol number
+app.delete('/api/patients/:protocol_number', (req, res) => {
+    const protocolNumber = req.params.protocol_number;
+
+    const sql = 'DELETE FROM patients WHERE protocol_number = ?';
+    db.run(sql, [protocolNumber], function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Gabim gjatë fshirjes së pacientit' });
+        }
+        if (this.changes === 0) {
+            return res.status(404).json({ error: 'Pacienti nuk u gjet' });
+        }
+        res.json({ message: 'Pacienti u fshi me sukses' });
+    });
+});

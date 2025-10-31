@@ -517,7 +517,7 @@
 
                 patients.forEach(p => {
                     html += '<tr>';
-                    html += `<td>${p.protocol_number}</td>`;
+                    html += `<td>${p.protocol_number} <button onclick="removePatient('${p.protocol_number}')" class="btn-danger" style="margin-left:5px;">Fshi</button></td>`;
                     html += `<td>${p.name}</td>`;
                     html += `<td>${p.gender}</td>`;
                     html += `<td>${p.age} vjeç</td>`;
@@ -557,7 +557,7 @@
 
                 result.patients.forEach(p => {
                     html += '<tr>';
-                    html += `<td>${p.protocol_number}</td>`;
+                    html += `<td>${p.protocol_number} <button onclick="removePatient('${p.protocol_number}')" class="btn-danger" style="margin-left:5px;">Fshi</button></td>`;
                     html += `<td>${p.name}</td>`;
                     html += `<td>${p.gender}</td>`;
                     html += `<td>${p.age} vjeç</td>`;

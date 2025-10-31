@@ -600,6 +600,26 @@
                 console.error('Error loading stats:', error);
             }
         }
+        async function removePatient(protocolNumber) {
+    if (!confirm(`A jeni i sigurt që doni të fshini pacientin me protokoll ${protocolNumber}?`)) return;
+
+    try {
+        const response = await fetch(`/api/patients/${protocolNumber}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            loadPatients(); // refresh the list
+        } else {
+            alert(result.error);
+        }
+    } catch (error) {
+        alert('Gabim gjatë fshirjes së pacientit');
+    }
+}
     </script>
 </body>
 </html>

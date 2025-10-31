@@ -1,19 +1,23 @@
 {
-  "name": "nodejs",
+  "name": "patient-registry",
   "version": "1.0.0",
-  "description": "",
+  "description": "Patient registry system with ICD-10, search, and statistics",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["patients", "registry", "healthcare", "sqlite", "express"],
+  "author": "Your Name",
+  "license": "MIT",
   "dependencies": {
-    "@types/node": "^22.13.11",
     "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
